@@ -54,19 +54,22 @@ model Category {
   name    String    @unique
   Product Product[]
 }
+
 enum State {
   activo
-  inactivo  
+  inactivo
 }
+
 model Brands {
   id      String    @id @default(uuid())
   name    String    @unique
-  state  State?
+  state   State?
   Product Product[]
 }
 
 model Product {
   id                 String   @id @default(uuid())
+  codigoean13        String?   @unique
   title              String
   description        String
   inStock            Int
