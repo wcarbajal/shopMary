@@ -27,6 +27,7 @@ cloudinary.config( process.env.CLOUDINARY_URL ?? '' );
 
 const productSchema = z.object( {
   id: z.string().uuid().optional().nullable(),
+  codigoean13: z.string().optional().nullable(),  
   title: z.string().min( 3 ).max( 255 ),
   slug: z.string().min( 3 ).max( 255 ),
   description: z.string(),
@@ -77,13 +78,14 @@ export const createUpdateProduct = async ( formData: FormData ) => {
   }
 
   const product = productParsed.data;
+  const codigo= product.codigoean13;
 
   product.slug = product.slug.toLowerCase().replace( / /g, '-' ).trim();
 
 
 
 
-  const { id, ...rest } = product;
+  const { id, codigoean13,...rest } = product;
 
 
   try {
@@ -98,6 +100,7 @@ export const createUpdateProduct = async ( formData: FormData ) => {
           where: { id },
           data: {
             title: rest.title,
+            codigoean13,
             description: rest.description,
             inStock: rest.inStock,
             price: rest.price,
