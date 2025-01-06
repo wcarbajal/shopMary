@@ -2,7 +2,7 @@ import NextAuth, { type NextAuthConfig } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import bcryptjs from 'bcryptjs';
 import { z } from 'zod';
-import { cookies } from 'next/headers';
+
 
 
 import prisma from './lib/prisma';
@@ -15,7 +15,7 @@ export const authConfig: NextAuthConfig = {
 
 
   pages: {
-    signIn: 'auth/login?error=AccessDenied',
+    signIn: 'auth/login',
     newUser: 'auth/new-account',
   },
 
