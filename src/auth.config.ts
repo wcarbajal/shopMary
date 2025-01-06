@@ -4,6 +4,7 @@ import bcryptjs from 'bcryptjs';
 import { z } from 'zod';
 import { cookies } from 'next/headers';
 
+
 import prisma from './lib/prisma';
 
 
@@ -11,28 +12,35 @@ import prisma from './lib/prisma';
 export const authConfig: NextAuthConfig = {
 
 
+
+
   pages: {
-    signIn: '/auth/login',
-    newUser: '/auth/new-account',
+    signIn: 'auth/login?error=AccessDenied',
+    newUser: 'auth/new-account',
   },
 
   callbacks: {
 
     authorized( { auth, request: { nextUrl } } ) {
-      console.log( { auth } );
+      
+      
+       console.log( { auth } );
 
-    
+
 
       //const theme = cookieStore.get('theme');
-      // const isLoggedIn = !!auth?.user;
+       const isLoggedIn = !!auth?.user;
 
-      // const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
-      // if (isOnDashboard) {
-      //   if (isLoggedIn) return true;
-      //   return false; // Redirect unauthenticated users to login page
-      // } else if (isLoggedIn) {
-      //   return Response.redirect(new URL('/dashboard', nextUrl));
-      // }
+       console.log( { isLoggedIn } );
+
+      const isOnDashboard = nextUrl.pathname.startsWith( '/admin' );
+
+      if ( isOnDashboard ) {
+        if ( isLoggedIn ) return true;
+        return false; // Redirect unauthenticated users to login page
+      } else if ( isLoggedIn ) {
+        return Response.redirect( new URL( '/admin', nextUrl ) );
+      }
       return true;
     },
 
