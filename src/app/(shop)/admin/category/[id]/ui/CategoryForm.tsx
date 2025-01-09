@@ -6,7 +6,7 @@ import Image from "next/image";
 import clsx from "clsx";
 import { createUpdateBrand, createUpdateCategory, createUpdateProduct, deleteProductImage } from "@/actions";
 import { redirect, useRouter } from 'next/navigation';
-import { ProductImage } from '@/components';
+import { ViewtImage } from '@/components';
 import { Brands, State } from '@prisma/client';
 import Link from 'next/link';
 

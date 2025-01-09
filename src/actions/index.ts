@@ -11,6 +11,7 @@ export * from './auth/register';
 export * from './brands/get-paginated-brands'
 export * from './brands/create-update-brand'
 export * from './brands/delete-brand';
+export * from './brands/change-brand-state';
 
 export * from './category/get-categories';
 export * from './category/get-category-by-id';
@@ -38,5 +39,9 @@ export * from './product/delete-product';
 
 export * from './user/change-user-role';
 export * from './user/get-paginater-users';
+export * from './user/delete-user';
+export * from './user/get-user-by-id';
+export * from './user/users-pagination';
+
 
 

@@ -21,7 +21,13 @@ export default async function OrdersPage() {
     <>
       <Title title="Mantenimiento de usuarios" />
 
-      <div className="mb-10">
+      <div className="flex justify-end mb-5 m-2 ">
+        <Link href="/admin/user/new" className="btn-primary">
+          Nuevo usuario
+        </Link>
+      </div>
+
+      <div className="mb-10 ">
         <UsersTable users={ users } />
 
         <Pagination totalPages={ 1 } />

@@ -1,29 +1,29 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Category, Product, ProductImage as ProductWithImage } from "@/interfaces";
-import Image from "next/image";
-import clsx from "clsx";
-import { createUpdateBrand, createUpdateProduct, deleteProductImage } from "@/actions";
-import { redirect, useRouter } from 'next/navigation';
-import { ViewtImage } from '@/components';
-import { Brands, State } from '@prisma/client';
+import { User } from "@/interfaces";
+import { createUpdateProduct, } from "@/actions";
+import { useRouter } from 'next/navigation';
+import { State } from '@prisma/client';
 import Link from 'next/link';
 
 interface Props {
-  idBrand: string;
-  nameBrand: string;
-  stateBrand: State | undefined;
+  user: Partial<User> ;
 };
 
 
 interface FormInputs {
-  id: string;
   name: string;
+  email: string;
+  telefono: string;
+  password: string;
+  image: string;
   state: State;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export const BrandForm = ( { idBrand, nameBrand, stateBrand }: Props ) => {
+export const UserForm = ( { user }: Props ) => {
 
   const router = useRouter();
 
@@ -34,31 +34,48 @@ export const BrandForm = ( { idBrand, nameBrand, stateBrand }: Props ) => {
 
   } = useForm<FormInputs>( {
     defaultValues: {
-      id: idBrand ?? "",
-      name: nameBrand ?? "",
-      state: stateBrand,
+      name: user!.name ?? '',
+      email: user!.email ?? '',
+      telefono: user!.telefono ?? '',
+      password: user!.password ?? '',
+      image: undefined,
+      state: user!.state ?? undefined,
+      createdAt: user!.createdAt ?? undefined,
+      updatedAt: user!.updatedAt ?? undefined
 
     },
   } );
 
-
-
-  /*  const onSizeChanged = ( size: string ) => {
-     const sizes = new Set( getValues( "sizes" ) );
-     sizes.has( size ) ? sizes.delete( size ) : sizes.add( size );
-     setValue( "sizes", Array.from( sizes ) );
-   };
-  */
   const onSubmit = async ( data: FormInputs ) => {
-    //const formData = new FormData();
 
-    console.log( 'data', data );
-    let identificador = data.id === '' ? 'new' : data.id;
-   
-    const brand = await createUpdateBrand( identificador, data.name, data.state! );
+    const formData = new FormData();
 
-    
-    if ( !brand.ok ) {
+    if ( user!.id ) {
+      formData.append( "id", user!.id ?? "" );
+    }
+
+    formData.append( "name", data.name );
+    formData.append( "email", data.email );
+    formData.append( "telefono", data.telefono );
+    formData.append( "password", data.password );
+    formData.append( "image", data.image );
+    formData.append( "state", data.state );
+
+
+
+
+
+    const { ok, product: updatedProduct } = await createUpdateProduct( formData );
+
+    if ( !ok ) {
+      alert( 'Producto no se pudo actualizar' );
+      return;
+    }
+
+    router.replace( `/admin/product/${ updatedProduct?.slug }` );
+
+
+    /* if ( !brand.ok ) {
       alert( 'Producto no se pudo actualizar' );
       return;
     }
@@ -66,7 +83,7 @@ export const BrandForm = ( { idBrand, nameBrand, stateBrand }: Props ) => {
       alert( 'Marca agregada con éxito' );
     }
 
-    window.location.replace( `/admin/brands` );
+    window.location.replace( `/admin/brands` ); */
 
 
   };
@@ -83,10 +100,10 @@ export const BrandForm = ( { idBrand, nameBrand, stateBrand }: Props ) => {
           <span>Nombre: </span>
           <input
             type="text"
-            className="p-2 border rounded-md bg-gray-200"
+            className="p-2 border rounded-md bg-gray-100"
             { ...register( "name", {
               required: {
-                value: true,                
+                value: true,
                 message: "El nombre es obligatorio",
               },
               minLength: {
@@ -109,7 +126,7 @@ export const BrandForm = ( { idBrand, nameBrand, stateBrand }: Props ) => {
         <div className="flex flex-col mb-2">
           <span>Estado: </span>
           <select
-            className="p-2 border rounded-md bg-gray-200"
+            className="p-2 border rounded-md bg-gray-100"
             { ...register( "state", { required: true } ) }
           >
             <option value="activo">Activo</option>
@@ -125,7 +142,7 @@ export const BrandForm = ( { idBrand, nameBrand, stateBrand }: Props ) => {
 
       <div className="flex justify-center gap-2">
 
-        <Link href='/admin/brands' className="btn-secondary">Regresar</Link>
+        <Link href='/admin/users' className="btn-secondary">Regresar</Link>
         <button className="btn-primary w-32">Guardar</button>
       </div>
 

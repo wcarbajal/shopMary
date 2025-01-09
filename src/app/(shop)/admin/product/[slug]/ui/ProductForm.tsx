@@ -6,7 +6,7 @@ import { Category, Product, ProductImage as ProductWithImage } from "@/interface
 import clsx from "clsx";
 import { createUpdateProduct, deleteProductImage } from "@/actions";
 import { useRouter } from 'next/navigation';
-import { ProductImage } from '@/components';
+import { ViewtImage } from '@/components';
 import { Brands, Measure } from '@prisma/client';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -50,7 +50,7 @@ export const ProductForm = ( { product, categories, brands }: Props ) => {
   const closeModal = () => { setIsModalOpen( false ); };
 
   const router = useRouter();
-  console.log( { product } );
+  
 
   const {
     handleSubmit,
@@ -387,7 +387,7 @@ export const ProductForm = ( { product, categories, brands }: Props ) => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             { product.ProductImage?.map( ( image ) => (
               <div key={ image.id }>
-                <ProductImage
+                <ViewtImage
                   alt={ product.title ?? "" }
                   src={ image.url }
                   width={ 300 }

@@ -2,6 +2,7 @@
 
 import { auth } from '@/auth.config';
 import prisma from '@/lib/prisma';
+import { State } from '@prisma/client';
 
 
 export const getPaginatedUsers = async() => {
@@ -18,6 +19,9 @@ export const getPaginatedUsers = async() => {
   const users = await prisma.user.findMany({
     orderBy: {
       name: 'desc'
+    },
+    where: {
+      state: State.activo
     }
   });
 

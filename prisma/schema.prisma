@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -70,7 +70,7 @@ model Brands {
 
 model Product {
   id                 String   @id @default(uuid())
-  codigoean13        String?   @unique
+  codigoean13        String?  @unique
   title              String
   description        String
   inStock            Int
@@ -108,10 +108,14 @@ model User {
   id            String    @id @default(uuid())
   name          String
   email         String    @unique
+  telefono      String?
   emailVerified DateTime?
   password      String
   role          Role      @default(user)
   image         String?
+  state         State?    @default(activo)
+  createdAt     DateTime?  @default(now())
+  updatedAt     DateTime?  @updatedAt
 
   address UserAddress?
 

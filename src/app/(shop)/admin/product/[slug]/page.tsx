@@ -1,3 +1,4 @@
+
 import { getCategories, getPaginatedBrands, getProductBySlug } from '@/actions';
 import { Title } from '@/components';
 import { redirect } from 'next/navigation';
