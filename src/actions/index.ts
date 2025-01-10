@@ -42,6 +42,7 @@ export * from './user/get-paginater-users';
 export * from './user/delete-user';
 export * from './user/get-user-by-id';
 export * from './user/users-pagination';
+export * from './user/create-update-user';
 
 
 

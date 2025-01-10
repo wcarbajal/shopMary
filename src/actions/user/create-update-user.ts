@@ -9,46 +9,6 @@ import { User } from '@/interfaces';
 
 cloudinary.config( process.env.CLOUDINARY_URL ?? '' );
 
-/* const productSchema = z.object( {
-  id: z.string().uuid().optional().nullable(),
-  codigoean13: z.string().optional().nullable(),  
-  title: z.string().min( 3 ).max( 255 ),
-  slug: z.string().min( 3 ).max( 255 ),
-  description: z.string(),
-  brandId: z.string( { message: 'Brand ID is required' } ),
-  measure: z.enum( [ 'nodefinido',
-    'barra',
-    'bolsa',
-    'botella',
-    'caja',
-    'frasco',
-    'galonera',
-    'gramo',
-    'kilogramo',
-    'lata',
-    'litro',
-    'mililitro',
-    'pack',
-    'paquete',
-    'tetrapack',
-    'unidad',
-    'vaso' ] ).optional().nullable(),
-  descriptionMeasure: z.string().optional().nullable(),
-  price: z.coerce
-    .number()
-    .min( 0 )
-    .transform( val => Number( val.toFixed( 2 ) ) ),
-  inStock: z.coerce
-    .number()
-    .min( 0 )
-    .transform( val => Number( val.toFixed( 0 ) ) ),
-  categoryId: z.string().uuid(),
-  sizes: z.coerce.string().transform( val => val.split( ',' ) ),
-  tags: z.string(),
-  gender: z.nativeEnum( Gender ),
-} ); */
-
-
 
 export const createUpdateUser = async ( formData: FormData ) => {
 
@@ -58,7 +18,7 @@ export const createUpdateUser = async ( formData: FormData ) => {
 
   const { id, imagen, ...rest } = data;
   console.log({data})
-  return data
+  return  'grabado' 
 
 /* 
   try {

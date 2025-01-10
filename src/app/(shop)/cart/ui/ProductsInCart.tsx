@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 import { useCartStore } from '@/store';
-import { ViewtImage, QuantitySelector } from '@/components';
+import { ViewImage, QuantitySelector } from '@/components';
 import Link from 'next/link';
 import { currencyFormat } from '../../../../utils/currencyFormat';
 
@@ -34,7 +34,7 @@ export const ProductsInCart = () => {
     <>
       {productsInCart.map((product) => (
         <div key={ `${ product.slug }-${ product.size }`  } className="flex mb-5">
-          <ViewtImage
+          <ViewImage
             src={product.image }
             width={100}
             height={100}

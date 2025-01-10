@@ -9,7 +9,7 @@ interface Props {
   height: number;
 }
 
-export const ViewtImage = ({
+export const ViewImage = ({
   src,
   alt,
   className,

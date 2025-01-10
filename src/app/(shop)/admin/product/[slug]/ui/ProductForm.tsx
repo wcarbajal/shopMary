@@ -6,7 +6,7 @@ import { Category, Product, ProductImage as ProductWithImage } from "@/interface
 import clsx from "clsx";
 import { createUpdateProduct, deleteProductImage } from "@/actions";
 import { useRouter } from 'next/navigation';
-import { ViewtImage } from '@/components';
+import { ViewImage } from '@/components';
 import { Brands, Measure } from '@prisma/client';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -387,7 +387,7 @@ export const ProductForm = ( { product, categories, brands }: Props ) => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             { product.ProductImage?.map( ( image ) => (
               <div key={ image.id }>
-                <ViewtImage
+                <ViewImage
                   alt={ product.title ?? "" }
                   src={ image.url }
                   width={ 300 }

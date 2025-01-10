@@ -3,7 +3,7 @@ export const revalidate = 0;
 
 // https://tailwindcomponents.com/component/hoverable-table
 import { getPaginatedOrders, getPaginatedProductsWithImages } from "@/actions";
-import { DeleteButton, Pagination, ViewtImage, Title } from "@/components";
+import { DeleteButton, Pagination, ViewImage, Title } from "@/components";
 import { currencyFormat } from "@/utils";
 import Image from "next/image";
 
@@ -104,7 +104,7 @@ export default async function OrdersPage( { searchParams }: Props ) {
             >
               <td className="   text-sm font-medium text-gray-900">
                  <Link href={ `/product/${ product.slug }` }>
-                  <ViewtImage
+                  <ViewImage
                     src={ product.ProductImage[ 0 ]?.url }
                     width={ 80 }
                     height={ 80 }

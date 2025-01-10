@@ -1,7 +1,7 @@
 'use client';
 
 import { changeUserRole } from '@/actions';
-import { ViewtImage } from '@/components';
+import { ViewImage } from '@/components';
 
 import { UserDeleteButton } from '@/components/users/UserDeleteButton';
 import type { User } from '@/interfaces';
@@ -78,7 +78,7 @@ export const UsersTable = ( { users }: Props ) => {
             >
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                 <Link href={ `/admin/user/${ user.id }` }>
-                  <ViewtImage
+                  <ViewImage
                     src={ user.image ?? process.env.NO_IMAGE_URL }
                     width={ 80 }
                     height={ 80 }
@@ -131,7 +131,7 @@ export const UsersTable = ( { users }: Props ) => {
               className="flex items-center relative gap-4 py-4 px-6 mb-5 transition duration-300 ease-in-out hover:bg-gray-100"
             >
               <Link href={ `/admin/user/${ user.id }` } className="hover:text-blue-500">
-                <ViewtImage
+                <ViewImage
                   src={ user.image ?? process.env.NO_IMAGE_URL }
                   width={ 80 }
                   height={ 100 }

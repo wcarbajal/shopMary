@@ -2,13 +2,15 @@
 
 import { useForm } from "react-hook-form";
 import { User } from "@/interfaces";
-import { createUpdateProduct, } from "@/actions";
+import { createUpdateProduct, createUpdateUser, } from "@/actions";
 import { useRouter } from 'next/navigation';
 import { State } from '@prisma/client';
 import Link from 'next/link';
+import { ViewImage } from '@/components';
+
 
 interface Props {
-  user: Partial<User> ;
+  user: Partial<User>;
 };
 
 
@@ -17,7 +19,8 @@ interface FormInputs {
   email: string;
   telefono: string;
   password: string;
-  image: string;
+  repassword: string;
+  image: FileList;
   state: State;
   createdAt: Date;
   updatedAt: Date;
@@ -27,9 +30,12 @@ export const UserForm = ( { user }: Props ) => {
 
   const router = useRouter();
 
+  const isNew = user!.id ? false : true;
+
   const {
     handleSubmit,
     register,
+    watch,
     formState: { errors },
 
   } = useForm<FormInputs>( {
@@ -37,7 +43,7 @@ export const UserForm = ( { user }: Props ) => {
       name: user!.name ?? '',
       email: user!.email ?? '',
       telefono: user!.telefono ?? '',
-      password: user!.password ?? '',
+      password: '' ,
       image: undefined,
       state: user!.state ?? undefined,
       createdAt: user!.createdAt ?? undefined,
@@ -49,30 +55,32 @@ export const UserForm = ( { user }: Props ) => {
   const onSubmit = async ( data: FormInputs ) => {
 
     const formData = new FormData();
+    console.log( 'Formdata', { formData } );
+
+ const { image, ...userToSave } = data;
+
 
     if ( user!.id ) {
       formData.append( "id", user!.id ?? "" );
     }
 
-    formData.append( "name", data.name );
-    formData.append( "email", data.email );
-    formData.append( "telefono", data.telefono );
-    formData.append( "password", data.password );
-    formData.append( "image", data.image );
-    formData.append( "state", data.state );
+    formData.append( "name", userToSave.name );
+    formData.append( "email", userToSave.email );
+    formData.append( "telefono", userToSave.telefono );
+    formData.append( "password", userToSave.password );
+    formData.append( "state", userToSave.state );
+    
+    formData.append( "image", image[0]);
 
+    const mensaje = await createUpdateUser( formData );
+    console.log( { mensaje } );
 
-
-
-
-    const { ok, product: updatedProduct } = await createUpdateProduct( formData );
-
-    if ( !ok ) {
+    /* if ( !ok ) {
       alert( 'Producto no se pudo actualizar' );
       return;
-    }
+    } */
 
-    router.replace( `/admin/product/${ updatedProduct?.slug }` );
+    //router.replace( `/admin/product/${ updatedProduct?.slug }` );
 
 
     /* if ( !brand.ok ) {
@@ -85,17 +93,31 @@ export const UserForm = ( { user }: Props ) => {
 
     window.location.replace( `/admin/brands` ); */
 
-
+    
   };
 
   return (
     <form
       onSubmit={ handleSubmit( onSubmit ) }
-      className="flex flex-col px-5 mb-16 gap-3 "
+      className="grid px-5 mb-16 grid-cols-1 sm:px-0 sm:grid-cols-2 gap-3"
     >
-      {/* Textos */ }
+
+      <div className="flex items-end flex-col">
+
+        <ViewImage
+          alt={ user.name ?? "" }
+          src={ user.image ?? process.env.NOT_IMAGE_URL }
+          width={ 400 }
+          height={ 400 }
+          className="rounded shadow-md object-cover w-full max-w-[600px]"
+        />
+
+
+      </div>
+
       <div className="w-full">
 
+        {/* Nombre */ }
         <div className="flex flex-col mb-2">
           <span>Nombre: </span>
           <input
@@ -122,7 +144,56 @@ export const UserForm = ( { user }: Props ) => {
             <span className="text-red-500">{ errors.name.message }</span>
           )
         }
+        {/* Email */ }
+        <div className="flex flex-col mb-2">
+          <span>E-mail: </span>
+          <input
+            type="email"
+            className="p-2 border rounded-md bg-gray-100"
+            { ...register( "email", {
+              required: {
+                value: true,
+                message: "El email es obligatorio",
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                message: "Ingrese un email válido",
+              },
 
+            } ) }
+          />
+        </div>
+        {
+          errors.email && (
+            <span className="text-red-500">{ errors.email.message }</span>
+          )
+        }
+        {/* Telefono */ }
+        <div className="flex flex-col mb-2">
+          <span>Telefono celular: </span>
+          <input
+            type="tel"
+            className="p-2 border rounded-md bg-gray-100"
+            { ...register( "telefono", {
+              required: {
+                value: true,
+                message: "El nombre es obligatorio",
+              },
+              pattern: {
+                value: /^(0051|\+51)?(9\d\d)-? ?(\d\d)-? ?(\d)-? ?(\d)-? ?(\d\d)$/,
+                message: "Ingrese un numero celular válido (9 dígitos).",
+              },
+            } ) }
+          />
+        </div>
+        {
+          errors.telefono && (
+            <span className="text-red-500">{ errors.telefono.message }</span>
+          )
+        }
+
+      
+        {/* Estado */ }
         <div className="flex flex-col mb-2">
           <span>Estado: </span>
           <select
@@ -132,15 +203,64 @@ export const UserForm = ( { user }: Props ) => {
             <option value="activo">Activo</option>
             <option value="inactivo">Inactivo</option>
           </select>
-
-
         </div>
+        
+        {/* Password */ }
+        <div className="flex flex-col mb-2">
+          <span>Actualizar password: </span>
+          <input
+            type="password"
+            className="p-2 border rounded-md bg-gray-100"
+            { ...register( "password", {
+              validate: (value) => {
+                if(!isNew || value){
+                  return true
+                }else {
+                  return 'Debe registrar password'                  
+                }                
+              } ,
+            } ) }
+          />
+        </div>
+        {
+          errors.password && (
+            <span className="text-red-500">{ errors.password.message }</span>
+          )
+        }
+        <div className="flex flex-col mb-2">
+          <span>Re-ingresar actulización de password: </span>
+          <input
+            type="password"
+            className="p-2 border rounded-md bg-gray-100"
+            { ...register( "repassword", {
+              required: {
+                value: false,
+                message: "Debe confirmar password",
+              },
+              validate:  (value) => value === watch('password') || 'Las contraseñas no coinciden',
+            } ) }
+          />
+        </div>
+        {
+          errors.repassword && (
+            <span className="text-red-500">{ errors.repassword.message }</span>
+          )
+        }
+          <div>
+          <input
+            type="file"
+            className="flex items-center h-10 w-full text-lg border rounded-md bg-gray-100"
+            
+            accept="image/png, image/jpeg, image/avif"
 
+            { ...register( "image" ) }
+          />
+        </div>
 
 
       </div>
 
-      <div className="flex justify-center gap-2">
+      <div className="sm:flex sm:justify-center w-full sm:mt-10 sm:col-span-2 ">
 
         <Link href='/admin/users' className="btn-secondary">Regresar</Link>
         <button className="btn-primary w-32">Guardar</button>
