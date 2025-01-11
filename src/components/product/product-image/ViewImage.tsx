@@ -32,6 +32,7 @@ export const ViewImage = ({
       alt={ alt }
       className={ className }
       style={ style }
+      priority={true}
     />
   );
 };

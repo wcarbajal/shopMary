@@ -9,125 +9,176 @@ import { User } from '@/interfaces';
 
 cloudinary.config( process.env.CLOUDINARY_URL ?? '' );
 
+const userSchema = z.object( {
+  id: z.string().uuid().optional().nullable(),
+  name: z.string().min( 3 ).max( 255 ),
+  email: z.string().email(),
+  telefono: z.string().optional().nullable(),
+  password: z.string(),
+  role: z.enum( [ 'admin', 'user' ] ),
+  state: z.enum( [ 'activo', 'inactivo' ] ),
+  createdAt: z.date().optional().nullable(),
+  updatedAt: z.date().optional().nullable(),
+} );
+
 
 export const createUpdateUser = async ( formData: FormData ) => {
 
 
   const data = Object.fromEntries( formData );
- 
+  const userParsed = userSchema.safeParse( data );
 
-  const { id, imagen, ...rest } = data;
-  console.log({data})
-  return  'grabado' 
+  if ( !userParsed.success ) {
+    
+    return { ok: false };
+  }
 
-/* 
+  const user = userParsed.data;
+
+  console.log( { user } );
+  const { id, ...rest } = user;
+
+
+
   try {
     const prismaTx = await prisma.$transaction( async ( tx ) => {
 
-      let user: User;
-      
+      let userNewUpdate: User;
+      let publicId: string ='';
+
 
       if ( id ) {
         // Actualizar
-        const user12 = await prisma.user.update( {
-          where: { id: id },
+        userNewUpdate = await prisma.user.update( {
+          where: { id },
           data: {
             name: rest.name,
-
+            email: rest.email,
+            telefono: rest.telefono,
+            password: rest.password,
+            role: rest.role,
           }
         } );
+
+        //Obtener imagen guardada
+        const imageUrl = userNewUpdate.image
+
+       /*  const imageUrl = await prisma.user.findUnique( {
+          where: { id },
+          select: { image: true }
+        } ); */
+        
+        if(imageUrl !== null){
+           publicId = imageUrl.split('/').pop()?.split('.')[0] ?? '';
+        }
+
+        
 
       } else {
         // Crear
 
-        product = await prisma.product.create( {
+        userNewUpdate = await prisma.user.create( {
           data: {
-            title: rest.title,
-            description: rest.description,
-            inStock: rest.inStock,
-            price: rest.price,
-            slug: rest.slug,
-            descriptionMeasure: rest.descriptionMeasure,
-            measure: rest.measure as Measure,
-            categoryId: rest.categoryId,
-            brandId: rest.brandId,
-            gender: rest.gender,
-            sizes: {
-              set: rest.sizes as Size[],
-            },
-            tags: {
-              set: tagsArray
-            }
+            name: rest.name,
+            email: rest.email,
+            telefono: rest.telefono,
+            password: rest.password,
+            role: rest.role,
           }
+
         } );
 
       }
+
+
+      
+
+
       // Proceso de carga y guardado de imagenes
       // Recorrer las imagenes y guardarlas
-      if ( formData.getAll( 'images' ) ) {
+      if ( formData.getAll( 'image' ) ) {
         // [https://url.jpg, https://url.jpg]
-        const images = await uploadImages( formData.getAll( 'images' ) as File[] );
+
+        
+
+        const images = await uploadImages( formData.getAll( 'image' ) as File[], publicId );
+
         if ( !images ) {
           throw new Error( 'No se pudo cargar las imágenes, rollingback' );
         }
 
-        await prisma.productImage.createMany( {
-          data: images.map( image => ( {
-            url: image!,
-            productId: product.id,
-          } ) )
+       
+
+
+        await prisma.user.update( {
+          where: {
+            id: userNewUpdate.id,
+          },
+          data: {
+            image: images[ 0 ],
+          }
         } );
 
       }
 
       return {
-        'product'
+        userNewUpdate
       };
     } );
 
 
     // Todo: RevalidatePaths
-    revalidatePath( '/admin/products' );
-    revalidatePath( `/admin/product/${ product.slug }` );
-    revalidatePath( `/products/${ product.slug }` );
+    revalidatePath( '/admin/users' );
+    revalidatePath( `/admin/user/${ user.id }` );
+    
 
 
     return {
       ok: true,
-      product: prismaTx.product,
+      user: prismaTx.userNewUpdate,
     };
 
 
-  } 
+  }
   catch ( error ) {
 
     return {
       ok: false,
       message: 'Revisar los logs, no se pudo actualizar/crear'
     };
-  } */
+  }
 
 };
 
 
 
-const uploadImages = async ( images: File[] ) => {
+const uploadImages = async ( images: File[], publicid:string ) => {
+
+ 
 
   try {
 
 
     const uploadPromises = images.map( async ( image ) => {
-
+     
       try {
         const Body = await image.arrayBuffer();
-        const base64Image = Buffer.from( Body ).toString( 'base64' );
        
-        return cloudinary.uploader.upload( `data:image/png;base64,${ base64Image }` )
-          .then( r => r.secure_url );
+        const base64Image = Buffer.from( Body ).toString( 'base64' );
+        let resultado;
 
-        //return url
-          
-        
+       if (publicid !== ''){
+          console.log( 'esta imagen se borrarà: ' + publicid );
+           cloudinary.uploader.destroy(publicid)               
+        }
+               
+        resultado =  cloudinary.uploader.upload( `data:image/png;base64,${ base64Image }`, {
+          folder: 'users'
+           
+        } ).then( r => r.secure_url );
+        console.log( {resultado} );
+
+        return resultado;
 
       } catch ( error ) {
         console.log( error );

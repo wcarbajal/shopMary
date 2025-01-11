@@ -98,7 +98,12 @@ brands: [
 
 
   categories: [
-    'Shirts', 'Pants', 'Hoodies', 'Hats', 'Bebidas', 'Licores', 'Abarrotes', 'Higiene', 'Cuidado Personal'
+    'Abarrotes',
+    'Bebidas', 
+    'Cuidado Personal',
+    'Higiene',
+    'Licores',
+    'Todos',
   ],
   products: [
     

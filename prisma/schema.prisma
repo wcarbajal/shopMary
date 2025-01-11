@@ -70,7 +70,7 @@ model Brands {
 
 model Product {
   id                 String   @id @default(uuid())
-  codigoean13        String?  @unique
+  codigoean13        String  @unique
   title              String
   description        String
   inStock            Int
@@ -78,9 +78,9 @@ model Product {
   sizes              Size[]   @default([])
   slug               String   @unique
   tags               String[] @default([])
-  gender             Gender
-  descriptionMeasure String?
-  measure            Measure? @default(nodefinido)
+  gender             Gender?
+  descriptionMeasure String
+  measure            Measure @default(nodefinido)
 
   // Relaciones
 

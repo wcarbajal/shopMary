@@ -204,32 +204,13 @@ const uploadImages = async ( images: File[] ) => {
         const Body = await image.arrayBuffer();
         const base64Image = Buffer.from( Body ).toString( 'base64' );
 
-
-       /*  const command = new PutObjectCommand( {
-          Bucket: bucketName,
-          Key: image.name,
-          Body: base64Image,
-          ContentType: image.type,
-        }
-        );
-        await s3Client.send( command );
-
-        const getCommand = new GetObjectCommand( {
-          Bucket: bucketName,
-          Key: image.name,
-          ResponseContentType: image.type,         
+        return cloudinary.uploader.upload( `data:image/png;base64,${ base64Image }`, {
+          folder: 'products',
           
-        }
-
-        );
-        const url = await getSignedUrl( s3Client, getCommand, {
-          expiresIn: 50000,
-        } );
- */
-        return cloudinary.uploader.upload( `data:image/png;base64,${ base64Image }` )
+        } )
           .then( r => r.secure_url );
 
-        //return url
+       
           
         
 
