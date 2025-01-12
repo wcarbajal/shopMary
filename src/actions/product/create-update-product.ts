@@ -27,7 +27,7 @@ cloudinary.config( process.env.CLOUDINARY_URL ?? '' );
 
 const productSchema = z.object( {
   id: z.string().uuid().optional().nullable(),
-  codigoean13: z.string().optional().nullable(),  
+  codigoean13: z.string().length(13, {message: '13 caracteres'}),  
   title: z.string().min( 3 ).max( 255 ),
   slug: z.string().min( 3 ).max( 255 ),
   description: z.string(),
@@ -49,7 +49,7 @@ const productSchema = z.object( {
     'tetrapack',
     'unidad',
     'vaso' ] ).optional().nullable(),
-  descriptionMeasure: z.string().optional().nullable(),
+  descriptionMeasure: z.string(),
   price: z.coerce
     .number()
     .min( 0 )
@@ -109,10 +109,10 @@ export const createUpdateProduct = async ( formData: FormData ) => {
             measure: rest.measure as Measure,
             categoryId: rest.categoryId,
             brandId: rest.brandId,
-            gender: rest.gender,
+           /*  gender: rest.gender,
             sizes: {
               set: rest.sizes as Size[],
-            },
+            }, */
             tags: {
               set: tagsArray,
             }
@@ -126,6 +126,7 @@ export const createUpdateProduct = async ( formData: FormData ) => {
         product = await prisma.product.create( {
           data: {
             title: rest.title,
+            codigoean13,
             description: rest.description,
             inStock: rest.inStock,
             price: rest.price,
@@ -134,10 +135,10 @@ export const createUpdateProduct = async ( formData: FormData ) => {
             measure: rest.measure as Measure,
             categoryId: rest.categoryId,
             brandId: rest.brandId,
-            gender: rest.gender,
+            /* gender: rest.gender,
             sizes: {
               set: rest.sizes as Size[],
-            },
+            }, */
             tags: {
               set: tagsArray
             }

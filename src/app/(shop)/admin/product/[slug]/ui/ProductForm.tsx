@@ -8,7 +8,6 @@ import { createUpdateProduct, deleteProductImage } from "@/actions";
 import { useRouter } from 'next/navigation';
 import { ViewImage } from '@/components';
 import { Brands, Measure } from '@prisma/client';
-import Link from 'next/link';
 import { useState } from 'react';
 import { Modal } from './Modal';
 
@@ -31,9 +30,9 @@ interface FormInputs {
   descriptionMeasure: string; //todo: descriptionMeasure field
   measure: Measure; //todo: measure field
 
-  sizes: string[];
+  //sizes: string[];
   tags: string;
-  gender: "men" | "women" | "kid" | "unisex";
+  //gender: "men" | "women" | "kid" | "unisex";
   categoryId: string;
 
 
@@ -50,7 +49,7 @@ export const ProductForm = ( { product, categories, brands }: Props ) => {
   const closeModal = () => { setIsModalOpen( false ); };
 
   const router = useRouter();
-  
+
 
   const {
     handleSubmit,
@@ -70,9 +69,9 @@ export const ProductForm = ( { product, categories, brands }: Props ) => {
       brandId: product.brand?.id ?? '',
       descriptionMeasure: product.descriptionMeasure ?? '',
       measure: product.measure ?? 'nodefinido',
-      sizes: product.sizes ?? [],
+      //sizes: product.sizes ?? [],
       tags: product.tags?.join( ", " ) ?? '',
-      gender: product.gender ?? 'unisex',
+      //gender: product.gender ?? 'unisex',
       categoryId: product.categoryId ?? '',
       images: undefined,
     },
@@ -82,11 +81,11 @@ export const ProductForm = ( { product, categories, brands }: Props ) => {
 
   watch( "brandId" );
 
-  const onSizeChanged = ( size: string ) => {
+  /* const onSizeChanged = ( size: string ) => {
     const sizes = new Set( getValues( "sizes" ) );
     sizes.has( size ) ? sizes.delete( size ) : sizes.add( size );
     setValue( "sizes", Array.from( sizes ) );
-  };
+  }; */
 
   const onSubmit = async ( data: FormInputs ) => {
     const formData = new FormData();
@@ -103,10 +102,10 @@ export const ProductForm = ( { product, categories, brands }: Props ) => {
     formData.append( "description", productToSave.description );
     formData.append( "price", productToSave.price.toString() );
     formData.append( "inStock", productToSave.inStock.toString() );
-    formData.append( "sizes", productToSave.sizes.toString() );
+    //formData.append( "sizes", productToSave.sizes.toString() );
     formData.append( "tags", productToSave.tags );
     formData.append( "categoryId", productToSave.categoryId );
-    formData.append( "gender", productToSave.gender );
+    //formData.append( "gender", productToSave.gender );
     formData.append( "brandId", productToSave.brandId );
     formData.append( "descriptionMeasure", productToSave.descriptionMeasure );
     formData.append( "measure", productToSave.measure );
@@ -157,7 +156,7 @@ export const ProductForm = ( { product, categories, brands }: Props ) => {
 
               } ) }
             />
-            <button className="btn-primary"  onClick={ openModal} type='button'>Escanear</button>
+            <button className="btn-primary" onClick={ openModal } type='button'>Escanear</button>
 
             <Modal isOpen={ isModalOpen } onClose={ closeModal }>
               <h2>Hello, Im a Modal</h2>
@@ -290,8 +289,16 @@ export const ProductForm = ( { product, categories, brands }: Props ) => {
             { ...register( "descriptionMeasure", { required: true } ) }
           />
         </div>
+
+
+
+        <button className="btn-primary w-full">Guardar</button>
+      </div>
+
+      {/* Selector de tallas y fotos */ }
+      <div className="w-full">
         <div className="flex flex-col mb-2">
-          <span>Price</span>
+          <span>Precio</span>
           <input
             type="number"
             min="0" step="0.10"
@@ -300,49 +307,6 @@ export const ProductForm = ( { product, categories, brands }: Props ) => {
           />
         </div>
 
-        <div className="flex flex-col mb-2">
-          <span>Tags</span>
-          <input
-            type="text"
-            className="p-2 border rounded-md bg-gray-200"
-            { ...register( "tags", { required: true } ) }
-          />
-        </div>
-
-        <div className="flex flex-col mb-2">
-          <span>Gender</span>
-          <select
-            className="p-2 border rounded-md bg-gray-200"
-            { ...register( "gender", { required: true } ) }
-          >
-            <option value="">[Seleccione]</option>
-            <option value="men">Men</option>
-            <option value="women">Women</option>
-            <option value="kid">Kid</option>
-            <option value="unisex">Unisex</option>
-          </select>
-        </div>
-
-        <div className="flex flex-col mb-2">
-          <span>Categoria</span>
-          <select
-            className="p-2 border rounded-md bg-gray-200"
-            { ...register( "categoryId", { required: true } ) }
-          >
-            <option value="">[Seleccione]</option>
-            { categories.map( ( category ) => (
-              <option key={ category.id } value={ category.id }>
-                { category.name }
-              </option>
-            ) ) }
-          </select>
-        </div>
-
-        <button className="btn-primary w-full">Guardar</button>
-      </div>
-
-      {/* Selector de tallas y fotos */ }
-      <div className="w-full">
         <div className="flex flex-col mb-2">
           <span>Inventario</span>
           <input
@@ -354,8 +318,8 @@ export const ProductForm = ( { product, categories, brands }: Props ) => {
 
         {/* As checkboxes */ }
         <div className="flex flex-col">
-          <span>Tallas</span>
-          <div className="flex flex-wrap">
+
+          {/* <div className="flex flex-wrap">
             { sizes.map( ( size ) => (
               // bg-blue-500 text-white <--- si está seleccionado
               <div
@@ -371,6 +335,30 @@ export const ProductForm = ( { product, categories, brands }: Props ) => {
                 <span>{ size }</span>
               </div>
             ) ) }
+          </div> */}
+
+          <div className="flex flex-col mb-2">
+            <span>Tags</span>
+            <input
+              type="text"
+              className="p-2 border rounded-md bg-gray-200"
+              { ...register( "tags", { required: true } ) }
+            />
+          </div>
+
+          <div className="flex flex-col mb-2">
+            <span>Categoria</span>
+            <select
+              className="p-2 border rounded-md bg-gray-200"
+              { ...register( "categoryId", { required: true } ) }
+            >
+              <option value="">[Seleccione]</option>
+              { categories.map( ( category ) => (
+                <option key={ category.id } value={ category.id }>
+                  { category.name }
+                </option>
+              ) ) }
+            </select>
           </div>
 
           <div className="flex flex-col mb-2">
@@ -390,8 +378,8 @@ export const ProductForm = ( { product, categories, brands }: Props ) => {
                 <ViewImage
                   alt={ product.title ?? "" }
                   src={ image.url }
-                  width={ 300 }
-                  height={ 300 }
+                  width={ 230 }
+                  height={ 230 }
                   className="rounded-t shadow-md"
                 />
 
