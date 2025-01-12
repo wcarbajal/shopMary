@@ -1,18 +1,24 @@
+import { Measure } from '@prisma/client';
 import bcryptjs from 'bcryptjs';
 
-
+/* 
 interface SeedProduct {
   description: string;
   images: string[];
   inStock: number;
   price: number;
-  sizes: ValidSizes[];
+  descriptionMeasure: string,
+  measure: Measure,
+  codigoean13: string,
+  /* sizes: ValidSizes[];
+  type: ValidTypes;
+  gender: 'men' | 'women' | 'kid' | 'unisex'; 
   slug: string;
   tags: string[];
   title: string;
-  type: ValidTypes;
-  gender: 'men' | 'women' | 'kid' | 'unisex';
 }
+ */
+
 interface SeedBrand{
   name: string;
   state: 'activo' | 'inactivo';
@@ -33,7 +39,7 @@ type ValidTypes = 'shirts' | 'pants' | 'hoodies' | 'hats';
 interface SeedData {
   users: SeedUser[];
   categories: string[];
-  products: SeedProduct[];
+  //products: SeedProduct[];
   brands: SeedBrand[];
 }
 
@@ -105,7 +111,7 @@ brands: [
     'Licores',
     'Todos',
   ],
-  products: [
+  /* products: [
     
       {        
         "description": "Designed for fit, comfort and style, the Men''s 3D T Logo Long Sleeve Tee is made from 100% cotton and features an understated T logo on the left chest.",
@@ -115,15 +121,18 @@ brands: [
         ],
         "title": "Men''s 3D T Logo Long Sleeve Tee",
         "inStock": 12,
-        type: "shirts",
+        "descriptionMeasure": "355ml",
+        "measure": "botella",
+        "codigoean13": "1234567890123",
+        type: "shirts", 
         "price": 40,
-        "sizes": ['XS','XXL'],
+        "sizes": ['XS','XXL'], 
         "slug": "men_3d_t_logo_long_sleeve_tee",
         "tags": ["shirt"],
-        "gender": "men",                             
+         "gender": "men",                              
         
-      },   
-    
+      },      
     
   ]
+   */
 };

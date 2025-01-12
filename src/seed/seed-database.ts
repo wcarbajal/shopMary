@@ -26,7 +26,7 @@ async function main() {
   await prisma.category.deleteMany();
   // ]);
   
-  const { categories, products, users, brands } = initialData;
+  const { categories, /* products, */ users, brands } = initialData;
 
 
   await prisma.brands.createMany({
@@ -65,14 +65,15 @@ async function main() {
 
   // Productos
 
-  products.forEach( async(product) => {
+  /* products.forEach( async(product) => {
 
-    const { type, images, ...rest } = product;
+    const {  type,  images, ...rest } = product;
 
     const dbProduct = await prisma.product.create({
       data: {
         ...rest,
-        categoryId: categoriesMap[type]
+
+         categoryId: categoriesMap[type] 
       }
     })
 
@@ -87,7 +88,7 @@ async function main() {
       data: imagesData
     });
 
-  });
+  }); */
 
 
 
