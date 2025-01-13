@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { Gender, Measure, Product, Size } from '@prisma/client';
+import {  Measure, Product, Size } from '@prisma/client';
 import { z } from 'zod';
 import { v2 as cloudinary } from 'cloudinary';
 
@@ -61,7 +61,7 @@ const productSchema = z.object( {
   categoryId: z.string().uuid(),
   sizes: z.coerce.string().transform( val => val.split( ',' ) ),
   tags: z.string(),
-  gender: z.nativeEnum( Gender ),
+  
 } );
 
 

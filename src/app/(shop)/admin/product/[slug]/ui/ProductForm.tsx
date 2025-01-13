@@ -17,7 +17,7 @@ interface Props {
   brands: Brands[];
 }
 
-const sizes = [ "XS", "S", "M", "L", "XL", "XXL" ];
+//const sizes = [ "XS", "S", "M", "L", "XL", "XXL" ];
 
 interface FormInputs {
   codigoean13: string;

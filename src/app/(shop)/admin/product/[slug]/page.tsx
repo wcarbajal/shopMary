@@ -22,6 +22,7 @@ export default async function ProductPage({ params }: Props) {
     getPaginatedBrands()
 
   ]);
+  
  
 
   // Todo: new

@@ -13,8 +13,7 @@ export interface Product {
   tags: string[];
   title: string;
   categoryId: string;
-  //todo: type: Type;
-  gender: 'men'|'women'|'kid'|'unisex';
+  //todo: type: Type;  
   brand?: Brands | undefined | null;
   measure: Measure | null;
   descriptionMeasure: string | null;
